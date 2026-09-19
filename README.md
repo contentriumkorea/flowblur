@@ -59,3 +59,11 @@ ctest --test-dir build -C Release --output-on-failure
 ## 라이선스
 
 아직 오픈소스 라이선스를 선택하지 않았습니다. 공개 저장소라는 이유만으로 재배포·상업적 이용 허가를 부여하지 않습니다. 공유 정책을 정한 뒤 별도 LICENSE를 추가하세요. Adobe SDK 사용에는 Adobe의 별도 조건이 적용됩니다.
+
+## Offline activation (Windows)
+
+Run `python configure_activation.py` once before building to create a private password verifier. The generated `native/activation_config.local.h` must not be committed. In Premiere, use **Activation > Activate / Status**. Before activation the effect passes through unchanged. Activation is saved with Windows DPAPI for the current Windows account. This is a shared-password local gate, not a server license or tamper-resistant DRM.
+
+## Windows updates (0.3.0)
+
+Download `FlowBlurSetup.exe` from [Releases](https://github.com/contentriumkorea/flowblur/releases/latest). After installation, use **Update > Check for Updates** in the effect controls. Save and close Adobe hosts before installing. Activation data and existing parameter IDs are preserved. See [release and update instructions](docs/UPDATES.md).

@@ -1,10 +1,12 @@
 from pathlib import Path
 import subprocess,sys,os
 root=Path(__file__).parent.resolve()
-sdk=Path(os.environ.get('AE_SDK_PATH', str(root/'sdk/AfterEffectsSDK_26.5_win/Examples'))).resolve()
-if not (sdk/'Headers/AE_Effect.h').is_file():
-    raise SystemExit('Set AE_SDK_PATH to the Adobe SDK Examples directory.')
+sdk=Path(os.environ.get('AE_SDK_PATH', str(root/'sdk/AfterEffectsSDK_26.5_win/Examples')))
 build=root/'native/build';build.mkdir(exist_ok=True)
+version=(root/'VERSION').read_text().strip()
+major,minor,patch=map(int,version.split('.'))
+if not (0<=major<=7 and 0<=minor<=15 and 0<=patch<=15):raise SystemExit('Version exceeds the current PiPL encoding range')
+(build/'version.h').write_text(f'#define FLOWBLUR_VERSION "{version}"\n#define FLOWBLUR_MAJOR {major}\n#define FLOWBLUR_MINOR {minor}\n#define FLOWBLUR_PATCH {patch}\n')
 env=dict(os.environ,ZIG_GLOBAL_CACHE_DIR=str(root/'.zig-cache'))
 zig=[sys.executable,'-m','ziglang']
 def run(args,output=None,cwd=root):
@@ -16,11 +18,11 @@ def run(args,output=None,cwd=root):
         print(p.stderr.decode(errors='replace')[-7000:]);raise SystemExit(p.returncode)
     if p.stderr:(build/'warnings.log').write_bytes(p.stderr)
 includes=sum([['-I',str(sdk/p)]for p in ['Headers','Headers/SP','Headers/Win','Util','Resources']],[])
-pipl=(sdk/'Template/Skeleton/SkeletonPiPL.r').read_text().replace('ADBE Skeleton','JCS FlowBlur Motion Blur').replace('Skeleton','FlowBlur Motion Blur').replace('Sample Plug-ins','Blur & Sharpen').replace('557057','65537').replace('0x02000000','0x00000002').replace('https://www.adobe.com','')
+pipl=(sdk/'Template/Skeleton/SkeletonPiPL.r').read_text().replace('ADBE Skeleton','JCS FlowBlur Motion Blur').replace('Skeleton','FlowBlur Motion Blur').replace('Sample Plug-ins','Blur & Sharpen').replace('557057',str((major<<19)|(minor<<15)|(patch<<11)|1)).replace('0x02000000','0x00000002').replace('https://www.adobe.com','')
 (build/'FlowBlur.r').write_text(pipl)
 run(zig+['cc','-E','-P','-x','c','-DMSWindows']+includes+[str(build/'FlowBlur.r')],build/'FlowBlur.rr')
 run([str(sdk/'Resources/PiPLtool.exe'),'FlowBlur.rr','FlowBlur.rrc'],cwd=build)
 run(zig+['cc','-E','-P','-x','c','-DMSWindows',str(build/'FlowBlur.rrc')],build/'FlowBlur.rc')
 run(zig+['rc','/fo',str(build/'FlowBlur.res'),str(build/'FlowBlur.rc')])
-run(zig+['c++','-std=c++17','-O2','-w','-shared','-DMSWindows','-DWIN32','-D_WINDOWS']+includes+['native/FlowBlur.cpp',str(build/'FlowBlur.res'),'-o',str(build/'FlowBlur.aex')])
+run(zig+['c++','-std=c++17','-O2','-w','-shared','-DMSWindows','-DWIN32','-D_WINDOWS']+includes+['native/FlowBlur.cpp',str(build/'FlowBlur.res'),'-lbcrypt','-lcrypt32','-lshell32','-luser32','-lgdi32','-o',str(build/'FlowBlur.aex')])
 print('Built '+str(build/'FlowBlur.aex'))
