@@ -44,7 +44,7 @@ public static class UpdateCore {
   var backup=Path.Combine(target,"rollback-"+Guid.NewGuid().ToString("N"));Directory.CreateDirectory(backup);
   var changed=new System.Collections.Generic.List<string>();
   try{
-   foreach(var file in Files)if(File.Exists(Path.Combine(target,file)))File.Copy(Path.Combine(target,file),Path.Combine(backup,file));
+   foreach(var file in Files)if(File.Exists(Path.Combine(target,file)))File.Copy(Path.Combine(target,file),Path.Combine(backup,file+".bak"));
    for(int i=0;i<Files.Length;i++){
     if(hostRunning())throw new IOException("Adobe 프로그램이 실행되었습니다. 종료 후 다시 시도해 주세요.");
     var file=Files[i];var dest=Path.Combine(target,file);var temp=Path.Combine(target,"new-"+Guid.NewGuid().ToString("N"));
@@ -52,7 +52,7 @@ public static class UpdateCore {
     if(afterCopy!=null)afterCopy(i);
    }
   }catch(Exception original){
-   try{foreach(var file in changed){var old=Path.Combine(backup,file);var dest=Path.Combine(target,file);if(File.Exists(old))File.Copy(old,dest,true);else File.Delete(dest);}}
+   try{foreach(var file in changed){var old=Path.Combine(backup,file+".bak");var dest=Path.Combine(target,file);if(File.Exists(old))File.Copy(old,dest,true);else File.Delete(dest);}}
    catch(Exception rollback){throw new IOException("설치와 복원에 실패했습니다. 백업: "+backup+" / "+rollback.Message,original);}
    throw;
   }

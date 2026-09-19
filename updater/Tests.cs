@@ -40,6 +40,7 @@ class Tests {
    UpdateCore.Install(stage,dest,()=>false,null);
    Check(File.ReadAllText(Path.Combine(dest,"FlowBlur.aex"))=="new-FlowBlur.aex","Install");
    Check(File.ReadAllText(Path.Combine(dest,"activation-v1.dat"))=="untouched","Activation preserved");
+   Check(Directory.GetFiles(dest,"*.aex",SearchOption.AllDirectories).Length==1,"Adobe scan must find exactly one plugin after install or rollback");
    using(var z=ZipFile.Open(Path.Combine(root,"bad.zip"),ZipArchiveMode.Create)){z.CreateEntry("../escape");}
    Reject(()=>UpdateCore.Extract(Path.Combine(root,"bad.zip"),Path.Combine(root,"bad-stage")));
   }finally{Directory.Delete(root,true);}

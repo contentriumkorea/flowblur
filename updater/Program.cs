@@ -10,7 +10,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 static class Program {
- internal static readonly string Target=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),@"Adobe\Common\Plug-ins\7.0\MediaCore\FlowBlur");
+ internal static string Target { get {
+  string adobe=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),"Adobe");
+  var dirs=Directory.GetDirectories(adobe,"Adobe Premiere Pro*");Array.Sort(dirs,StringComparer.OrdinalIgnoreCase);Array.Reverse(dirs);
+  foreach(var dir in dirs)if(File.Exists(Path.Combine(dir,"Adobe Premiere Pro.exe")))return Path.Combine(dir,"PlugIns","Common","FlowBlur");
+  throw new IOException("설치된 Premiere Pro를 찾을 수 없습니다.");
+ } }
+ internal static readonly string RecoveryRoot=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),"Contentrium","FlowBlur Recovery");
+ internal static readonly string LegacyTarget=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),@"Adobe\Common\Plug-ins\7.0\MediaCore\FlowBlur");
  internal static bool HostRunning(){foreach(var p in Process.GetProcesses())using(p){try{string n=p.ProcessName;if(n.Equals("Adobe Premiere Pro",StringComparison.OrdinalIgnoreCase)||n.Equals("AfterFX",StringComparison.OrdinalIgnoreCase)||n.Equals("Adobe Media Encoder",StringComparison.OrdinalIgnoreCase))return true;}catch{}}return false;}
  internal static string Installed(){var p=Path.Combine(Target,"version.txt");if(File.Exists(p)){var v=File.ReadAllText(p).Trim();UpdateCore.Parse(v);return v;}return File.Exists(Path.Combine(Target,"FlowBlur.aex"))?"0.2.0":"0.0.0";}
  [STAThread] static int Main(string[] args){
@@ -38,13 +45,21 @@ static class Program {
     var manifest=UpdateCore.VerifyManifest(File.ReadAllText(Path.Combine(download,"update.json")),ReleaseKey.PublicXml);
     if(UpdateCore.Compare(manifest.version,Installed())<=0)throw new IOException("같거나 이전 버전은 설치하지 않습니다.");
     UpdateCore.CheckPath(Target);Directory.CreateDirectory(Target);
-    stage=Path.Combine(Target,"staging-"+Guid.NewGuid().ToString("N"));Directory.CreateDirectory(stage);
+    UpdateCore.CheckPath(RecoveryRoot);
+    stage=Path.Combine(RecoveryRoot,"staging-"+Guid.NewGuid().ToString("N"));Directory.CreateDirectory(stage);
     var protectedZip=Path.Combine(stage,"package.zip");
     using(var source=File.OpenRead(Path.Combine(download,"package.zip"))){if(source.Length!=manifest.size)throw new IOException("패키지 크기 오류");using(var dest=File.Create(protectedZip))source.CopyTo(dest);}
     UpdateCore.VerifyPackage(protectedZip,manifest);
     var payload=Path.Combine(stage,"payload");UpdateCore.Extract(protectedZip,payload);
     if(File.ReadAllText(Path.Combine(payload,"version.txt")).Trim()!=manifest.version)throw new IOException("패키지 버전 오류");
-    UpdateCore.Install(payload,Target,HostRunning,null);
+    string legacyBackup=null;
+    if(Directory.Exists(LegacyTarget)){
+     UpdateCore.CheckPath(LegacyTarget);
+     legacyBackup=Path.Combine(RecoveryRoot,"legacy-"+Guid.NewGuid().ToString("N"));
+     Directory.Move(LegacyTarget,legacyBackup);
+    }
+    try{UpdateCore.Install(payload,Target,HostRunning,null);}
+    catch{if(legacyBackup!=null && !Directory.Exists(LegacyTarget))Directory.Move(legacyBackup,LegacyTarget);throw;}
     return 0;
    }catch(Exception e){MessageBox.Show(e.Message,"FlowBlur 설치 실패",MessageBoxButtons.OK,MessageBoxIcon.Error);return 1;}
    finally{if(stage!=null){try{Directory.Delete(stage,true);}catch{}}if(locked)mutex.ReleaseMutex();}

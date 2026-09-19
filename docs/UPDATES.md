@@ -23,3 +23,7 @@
 설치 시 기존 파일은 설치 폴더의 `rollback-<고유값>`에 보관됩니다. 설치 중 오류가 나면 변경된 파일을 복원합니다. 실행 중인 Adobe 앱, 사용 중인 파일, 권한 거절, 변조 파일은 설치 완료로 처리하지 않습니다.
 
 `updater/Tests.cs`는 버전 비교, 서명, 파일 해시, 압축 경로, 실행 중 호스트, 중간 실패 복원과 인증 파일 보존을 검증합니다. `updater/VerifyRelease.cs`는 실제 릴리스 메타데이터 및 ZIP을 검증합니다. `native/test_host.cpp`는 빌드된 AEX의 초기화·버튼 등록·미인증 렌더 동작을 검증합니다.
+
+## 0.3.1 Premiere-only installation
+
+The installer uses the newest installed Premiere Pro folder: `PlugIns/Common/FlowBlur`. Legacy shared MediaCore installations move to `Program Files/Contentrium/FlowBlur Recovery` after Adobe hosts close. Rollback files use `.bak` extensions so Adobe cannot discover duplicate effects. After Effects is not a supported host. Separate Adobe Media Encoder queue rendering is not verified for this private Premiere installation.
