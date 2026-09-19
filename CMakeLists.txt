@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.16)
+project(FlowBlurCore LANGUAGES CXX)
+add_executable(flowblur_core_tests native/test_core.cpp)
+target_compile_features(flowblur_core_tests PRIVATE cxx_std_17)
+enable_testing()
+add_test(NAME flowblur_core COMMAND flowblur_core_tests)

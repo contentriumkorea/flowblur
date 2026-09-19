@@ -1,0 +1,17 @@
+sdk/
+.venv/
+.zig-cache/
+__pycache__/
+build/
+native/build/
+*.exe
+*.pdb
+*.lib
+*.aex
+*.plugin/
+*.zip
+*.log
+*.mp4
+*.mov
+*.prproj
+.DS_Store
