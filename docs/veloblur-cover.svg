@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">VeloBlur</title><desc id="desc">Premiere Pro motion blur plugin</desc>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#101524"/><stop offset="1" stop-color="#211637"/></linearGradient><linearGradient id="beam"><stop stop-color="#74f5e7" stop-opacity="0"/><stop offset=".5" stop-color="#74f5e7"/><stop offset="1" stop-color="#bc81ff" stop-opacity="0"/></linearGradient></defs>
+  <rect width="1200" height="420" rx="24" fill="url(#bg)"/>
+  <g stroke="url(#beam)" stroke-width="14" stroke-linecap="round" opacity=".85"><path d="M700 90 1110 90"/><path d="M650 150 1060 150"/><path d="M720 210 1130 210"/><path d="M680 270 1090 270"/></g>
+  <text x="70" y="128" fill="#74f5e7" font-family="Arial,sans-serif" font-size="20" font-weight="700" letter-spacing="5">CONTENTRIUM / PREMIERE PRO</text>
+  <text x="65" y="257" fill="#fff" font-family="Arial,sans-serif" font-size="100" font-weight="800" letter-spacing="-5">VeloBlur</text>
+  <text x="70" y="320" fill="#b8bbd1" font-family="Arial,sans-serif" font-size="27">MOTION BLUR · WINDOWS EFFECT</text>
+</svg>
