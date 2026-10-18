@@ -18,7 +18,7 @@ def run(args,output=None,cwd=root):
         print(p.stderr.decode(errors='replace')[-7000:]);raise SystemExit(p.returncode)
     if p.stderr:(build/'warnings.log').write_bytes(p.stderr)
 includes=sum([['-I',str(sdk/p)]for p in ['Headers','Headers/SP','Headers/Win','Util','Resources']],[])
-pipl=(sdk/'Template/Skeleton/SkeletonPiPL.r').read_text().replace('ADBE Skeleton','JCS FlowBlur Motion Blur').replace('Skeleton','FlowBlur Motion Blur').replace('Sample Plug-ins','Blur & Sharpen').replace('557057',str((major<<19)|(minor<<15)|(patch<<11)|1)).replace('0x02000000','0x00000002').replace('https://www.adobe.com','')
+pipl=(sdk/'Template/Skeleton/SkeletonPiPL.r').read_text().replace('ADBE Skeleton','JCS FlowBlur Motion Blur').replace('Skeleton','VeloBlur Motion Blur').replace('Sample Plug-ins','Blur & Sharpen').replace('557057',str((major<<19)|(minor<<15)|(patch<<11)|1)).replace('0x02000000','0x00000002').replace('https://www.adobe.com','')
 (build/'FlowBlur.r').write_text(pipl)
 run(zig+['cc','-E','-P','-x','c','-DMSWindows']+includes+[str(build/'FlowBlur.r')],build/'FlowBlur.rr')
 run([str(sdk/'Resources/PiPLtool.exe'),'FlowBlur.rr','FlowBlur.rrc'],cwd=build)

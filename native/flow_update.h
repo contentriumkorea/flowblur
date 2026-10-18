@@ -9,7 +9,7 @@ inline void show(){
  wchar_t filename[32768]{};DWORD length=GetModuleFileNameW(module,filename,32768);
  if(!length||length>=32768)return;
  std::wstring path(filename);path=path.substr(0,path.find_last_of(L"\\/"))+L"\\FlowBlurUpdater.exe";
- if(GetFileAttributesW(path.c_str())==INVALID_FILE_ATTRIBUTES){MessageBoxW(GetActiveWindow(),L"The FlowBlur updater is missing. Please run the latest FlowBlur Setup installer.",L"FlowBlur Update",MB_OK|MB_ICONINFORMATION);return;}
- if(reinterpret_cast<INT_PTR>(ShellExecuteW(GetActiveWindow(),L"open",path.c_str(),nullptr,nullptr,SW_SHOWNORMAL))<=32)MessageBoxW(GetActiveWindow(),L"Could not start the FlowBlur updater.",L"FlowBlur Update",MB_OK|MB_ICONERROR);
+ if(GetFileAttributesW(path.c_str())==INVALID_FILE_ATTRIBUTES){MessageBoxW(GetActiveWindow(),L"The VeloBlur updater is missing. Please run the latest VeloBlur Setup installer.",L"VeloBlur Update",MB_OK|MB_ICONINFORMATION);return;}
+ if(reinterpret_cast<INT_PTR>(ShellExecuteW(GetActiveWindow(),L"open",path.c_str(),nullptr,nullptr,SW_SHOWNORMAL))<=32)MessageBoxW(GetActiveWindow(),L"Could not start the VeloBlur updater.",L"VeloBlur Update",MB_OK|MB_ICONERROR);
 }
 }

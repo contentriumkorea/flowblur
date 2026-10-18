@@ -25,12 +25,12 @@ static class Program {
   if(args.Length==2 && args[0]=="--install")return Install(args[1]);
   if(args.Length==0){
    try{var dir=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"Contentrium","FlowBlur","UpdateSessions",Guid.NewGuid().ToString("N"));Directory.CreateDirectory(dir);var copy=Path.Combine(dir,"FlowBlurUpdater.exe");File.Copy(Application.ExecutablePath,copy);Process.Start(new ProcessStartInfo(copy,"--ui"){UseShellExecute=true});return 0;}
-   catch(Exception e){MessageBox.Show(e.Message,"FlowBlur 업데이트");return 1;}
+   catch(Exception e){MessageBox.Show(e.Message,"VeloBlur 업데이트");return 1;}
   }
   if(args.Length!=1||args[0]!="--ui")return 2;
   using(var mutex=new Mutex(false,@"Local\Contentrium.FlowBlur.UpdateWindow")){
    bool locked=false;try{locked=mutex.WaitOne(0);}catch(AbandonedMutexException){locked=true;}
-   if(!locked){MessageBox.Show("FlowBlur 업데이트 창이 이미 열려 있습니다.","FlowBlur");return 0;}
+   if(!locked){MessageBox.Show("VeloBlur 업데이트 창이 이미 열려 있습니다.","VeloBlur");return 0;}
    try{Application.Run(new UpdateWindow());}finally{mutex.ReleaseMutex();}
   }return 0;
  }
@@ -61,7 +61,7 @@ static class Program {
     try{UpdateCore.Install(payload,Target,HostRunning,null);}
     catch{if(legacyBackup!=null && !Directory.Exists(LegacyTarget))Directory.Move(legacyBackup,LegacyTarget);throw;}
     return 0;
-   }catch(Exception e){MessageBox.Show(e.Message,"FlowBlur 설치 실패",MessageBoxButtons.OK,MessageBoxIcon.Error);return 1;}
+   }catch(Exception e){MessageBox.Show(e.Message,"VeloBlur 설치 실패",MessageBoxButtons.OK,MessageBoxIcon.Error);return 1;}
    finally{if(stage!=null){try{Directory.Delete(stage,true);}catch{}}if(locked)mutex.ReleaseMutex();}
   }
  }
@@ -73,9 +73,9 @@ sealed class UpdateWindow:Form {
  readonly CancellationTokenSource cancellation=new CancellationTokenSource();
  Manifest manifest;string work;bool downloaded,busy,installing,complete;
  public UpdateWindow(){
-  Text="FlowBlur 업데이트";ClientSize=new Size(530,365);FormBorderStyle=FormBorderStyle.FixedDialog;MaximizeBox=false;StartPosition=FormStartPosition.CenterScreen;
+  Text="VeloBlur 업데이트";ClientSize=new Size(530,365);FormBorderStyle=FormBorderStyle.FixedDialog;MaximizeBox=false;StartPosition=FormStartPosition.CenterScreen;
   Font=new Font("Malgun Gothic",10);BackColor=Color.FromArgb(20,23,30);ForeColor=Color.White;
-  var title=new Label{Text="FlowBlur Motion Blur",Font=new Font("Segoe UI",19,FontStyle.Bold),Bounds=new Rectangle(24,20,480,37)};
+  var title=new Label{Text="VeloBlur Motion Blur",Font=new Font("Segoe UI",19,FontStyle.Bold),Bounds=new Rectangle(24,20,480,37)};
   versions.SetBounds(26,65,475,25);status.SetBounds(26,101,475,47);status.Text="새 버전을 확인하고 있습니다…";
   notes.SetBounds(26,154,475,115);notes.Multiline=true;notes.ReadOnly=true;notes.ScrollBars=ScrollBars.Vertical;notes.BackColor=Color.FromArgb(30,34,44);notes.ForeColor=Color.White;notes.BorderStyle=BorderStyle.FixedSingle;
   progress.SetBounds(26,280,475,10);action.SetBounds(267,308,140,34);later.SetBounds(415,308,86,34);action.Text="확인 중";action.Enabled=false;later.Text="나중에";
@@ -85,7 +85,7 @@ sealed class UpdateWindow:Form {
   Shown+=async(s,e)=>await Check();FormClosing+=(s,e)=>{if(installing){e.Cancel=true;return;}cancellation.Cancel();};
  }
  void LaunchPremiere(){
-  try{var adobe=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),"Adobe");var dirs=Directory.GetDirectories(adobe,"Adobe Premiere Pro*");Array.Sort(dirs,StringComparer.OrdinalIgnoreCase);Array.Reverse(dirs);foreach(var dir in dirs){var exe=Path.Combine(dir,"Adobe Premiere Pro.exe");if(File.Exists(exe)){Process.Start(new ProcessStartInfo(exe){UseShellExecute=true});Close();return;}}MessageBox.Show("시작 메뉴에서 Premiere를 실행해 주세요.","FlowBlur");}catch(Exception e){MessageBox.Show(e.Message,"FlowBlur");}
+  try{var adobe=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),"Adobe");var dirs=Directory.GetDirectories(adobe,"Adobe Premiere Pro*");Array.Sort(dirs,StringComparer.OrdinalIgnoreCase);Array.Reverse(dirs);foreach(var dir in dirs){var exe=Path.Combine(dir,"Adobe Premiere Pro.exe");if(File.Exists(exe)){Process.Start(new ProcessStartInfo(exe){UseShellExecute=true});Close();return;}}MessageBox.Show("시작 메뉴에서 Premiere를 실행해 주세요.","VeloBlur");}catch(Exception e){MessageBox.Show(e.Message,"VeloBlur");}
  }
  static HttpClient Client(){var client=new HttpClient();client.Timeout=TimeSpan.FromMinutes(3);client.DefaultRequestHeaders.UserAgent.ParseAdd("Contentrium-FlowBlur-Updater/0.3");return client;}
  async Task<byte[]> Fetch(string url,long limit,string file){
