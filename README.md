@@ -1,6 +1,10 @@
-# FlowBlur Motion Blur (experimental)
+# VeloBlur
 
-Premiere Pro용 CPU 모션 블러 네이티브 효과. 효과 목록의 **Video Effects → Blur & Sharpen → FlowBlur Motion Blur**에서 사용합니다.
+![VeloBlur cover](docs/veloblur-cover.svg)
+
+[Contentrium 홈페이지](https://contentrium.com/) · [Windows 다운로드](https://github.com/contentriumkorea/flowblur/releases/download/v0.3.2/FlowBlurSetup.exe)
+
+Premiere Pro용 CPU 모션 블러 네이티브 효과. 효과 목록의 **Video Effects → Blur & Sharpen → VeloBlur Motion Blur**에서 사용합니다. 기존 프로젝트의 효과 식별자와 업데이트 경로는 유지합니다.
 
 ## 현재 상태
 
