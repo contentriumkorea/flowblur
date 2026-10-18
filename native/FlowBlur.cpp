@@ -67,7 +67,7 @@ static PF_Err setup(PF_InData*in_data,PF_OutData*out_data){
 }
 extern "C" __declspec(dllexport) PF_Err EffectMain(PF_Cmd cmd,PF_InData*in_data,PF_OutData*out_data,PF_ParamDef*params[],PF_LayerDef*output,void*extra){
  try{
-  if(cmd==PF_Cmd_ABOUT){std::strcpy(out_data->return_msg,"FlowBlur Motion Blur " FLOWBLUR_VERSION "\rActivation > Activate / Status\rUpdate > Check for Updates\rIndependent of RE:Vision RSMB.");}
+  if(cmd==PF_Cmd_ABOUT){std::strcpy(out_data->return_msg,"VeloBlur Motion Blur " FLOWBLUR_VERSION "\rActivation > Activate / Status\rUpdate > Check for Updates\rIndependent of RE:Vision RSMB.");}
   else if(cmd==PF_Cmd_GLOBAL_SETUP){
    out_data->my_version=PF_VERSION(FLOWBLUR_MAJOR,FLOWBLUR_MINOR,FLOWBLUR_PATCH,PF_Stage_DEVELOP,1);out_data->out_flags=FLAGS;out_data->out_flags2=0;
    FormatSuite fs(in_data);if(fs.p){fs.p->ClearSupportedPixelFormats(in_data->effect_ref);fs.p->AddSupportedPixelFormat(in_data->effect_ref,PrPixelFormat_BGRA_4444_32f);fs.p->AddSupportedPixelFormat(in_data->effect_ref,PrPixelFormat_BGRA_4444_8u);}
@@ -104,7 +104,7 @@ extern "C" __declspec(dllexport) PF_Err EffectMain(PF_Cmd cmd,PF_InData*in_data,
 }
 extern "C" __declspec(dllexport) PF_Err PluginDataEntryFunction2(PF_PluginDataPtr inPtr,PF_PluginDataCB2 cb,SPBasicSuite*,const char*,const char*){
  PF_Err result=PF_Err_NONE;
- PF_REGISTER_EFFECT_EXT2(inPtr,cb,"FlowBlur Motion Blur","JCS FlowBlur Motion Blur","Blur & Sharpen",AE_RESERVED_INFO,"EffectMain","");
+ PF_REGISTER_EFFECT_EXT2(inPtr,cb,"VeloBlur Motion Blur","JCS FlowBlur Motion Blur","Blur & Sharpen",AE_RESERVED_INFO,"EffectMain","");
  return result;
 }
 // Host-independent entry used to test the exact compiled rendering engine.
