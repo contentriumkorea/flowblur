@@ -69,7 +69,7 @@ inline std::once_flag initialized;
 inline bool active(){std::call_once(initialized,[]{unlocked=loadToken(licensePath(),token());});return unlocked.load();}
 inline INT_PTR CALLBACK dialogProc(HWND dialog,UINT message,WPARAM wParam,LPARAM){
  if(message==WM_INITDIALOG){
-  SetWindowTextW(dialog,L"FlowBlur Activation");
+  SetWindowTextW(dialog,L"VeloBlur Activation");
   auto add=[&](LPCWSTR klass,LPCWSTR title,DWORD style,int x,int y,int w,int h,int id){
    HWND control=CreateWindowExW(0,klass,title,WS_CHILD|WS_VISIBLE|style,x,y,w,h,dialog,(HMENU)(INT_PTR)id,GetModuleHandleW(nullptr),nullptr);
    SendMessageW(control,WM_SETFONT,(WPARAM)GetStockObject(DEFAULT_GUI_FONT),TRUE);return control;
@@ -96,13 +96,13 @@ inline INT_PTR CALLBACK dialogProc(HWND dialog,UINT message,WPARAM wParam,LPARAM
  return FALSE;
 }
 inline bool showDialog(){
- if(active()){MessageBoxW(GetActiveWindow(),L"FlowBlur is activated for this Windows account.",L"FlowBlur Activation",MB_OK|MB_ICONINFORMATION);return true;}
+ if(active()){MessageBoxW(GetActiveWindow(),L"VeloBlur is activated for this Windows account.",L"VeloBlur Activation",MB_OK|MB_ICONINFORMATION);return true;}
  // A zero-control dialog; controls are created during WM_INITDIALOG.
  struct alignas(DWORD) EmptyDialog {DLGTEMPLATE header;WORD menu;WORD klass;WORD title;} layout{};
  layout.header.style=WS_POPUP|WS_CAPTION|WS_SYSMENU|DS_MODALFRAME|DS_CENTER;
  layout.header.dwExtendedStyle=WS_EX_CONTROLPARENT;layout.header.cx=245;layout.header.cy=120;
  auto result=DialogBoxIndirectParamW(GetModuleHandleW(nullptr),&layout.header,GetActiveWindow(),dialogProc,0);
- if(result==-1)MessageBoxW(GetActiveWindow(),L"Could not open the activation dialog.",L"FlowBlur",MB_OK|MB_ICONERROR);
+ if(result==-1)MessageBoxW(GetActiveWindow(),L"Could not open the activation dialog.",L"VeloBlur",MB_OK|MB_ICONERROR);
  return active();
 }
 }
